@@ -1,0 +1,158 @@
+Displaying user attribute by mention
+------------------------------------
+*********Getting the member*********
+let guild = client.guilds.get("306258975509446656"); //retrieve guild
+let member = guild.member(message.mentions.users.first()); //get first mention of message
+let nickname = member ? member.displayName : null; //if member is there get the displayname otherwise null
+
+
+Collect message response
+------------------------
+const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 10000 });
+//console.log(collector)
+collector.on('collect', message => {
+  if (message.content == "Y") {
+                
+              
+  } else if (message.content == "N") {  }
+});
+
+
+
+
+URLS
+-------------------
+CSS COLORS (CANVAS)
+http://w3schools.sinsixx.com/css/css_colornames.asp.htm
+
+deleted commands // 
+
+
+  if (command == "fight") {
+    var msg = message.content;
+    var txt = msg.replace(":fight ", "");
+    var fight = txt.split(" ");
+    const attachment = new Attachment(
+      "http://dannydebito.000webhostapp.com/fight.php?text=" +
+        fight[0] +
+        "&text2=" +
+        fight[1] +
+        "&text3=" +
+        fight[2] +
+        "#.jpg"
+    );
+    message.channel.send(attachment);
+  }
+  
+  
+if (command === "mse") {
+    message.channel
+      .fetchMessages()
+      .then(messages => {
+        const botMessages = messages.filter(msg => msg.author.bot);
+        message.channel.bulkDelete(botMessages);
+        var messagesDeleted = botMessages.array().length; // number of messages deleted
+
+        // Logging the number of messages deleted on both the channel and console.
+        message.channel.send(
+          "Deletion of messages successful. Total messages deleted: " +
+            messagesDeleted
+        );
+        console.log(
+          "Deletion of messages successful. Total messages deleted: " +
+            messagesDeleted
+        );
+      })
+      .catch(err => {
+        console.log("Error while doing Bulk Delete");
+        console.log(err);
+      });
+  }
+  
+EXP DECREMENT PER MESSAGE 
+---------------------------
+//Auto decrement pet hunger when message sent!!!
+console.log(message.content);
+if(message.content.split(" ")[0] != ":pet" || message.content.split(" ")[0]  != ":profile" || message.content != "N" || 
+   message.content != "E" || message.content != "A" || message.author.id != '572539036418441259' && collecting == 1){
+  var pool        = mysql.createPool({
+    connectionLimit : 100, // default = 10
+    host            : process.env.db_host,
+    user            : process.env.db_user,
+    password        : process.env.db_passwd,
+    database        : process.env.db_name
+  });
+  
+pool.getConnection(function (err, connection) {
+  if (err) throw err;
+  var initQer;
+  var mesId;
+  mesId = message.author.id;
+  initQer = "SELECT * FROM members WHERE id=" + mesId;
+  if(connection.query(initQer, function(result, fields) {}) != undefined){
+      connection.query(initQer, function(err, result, fields) {
+        if (!result.length) {
+            console.log('no profile available to increment!');
+        } else {
+          var mes = JSON.stringify(result[0].mes).replace(/[\<>@#&!"]/g, "");
+              mes = parseInt(mes);
+              mes += 1;
+              /*UPDATE members SET mes = previous+1 WHERE id = 'ID'*/
+              var update = "UPDATE members SET mes = " + mes + " WHERE id = " + mesId;
+        
+              connection.query(update, function(err, result, fields) {
+                if (err) throw err;
+               
+                else{ connection.release();
+                  console.log("message incremented = " + mes);
+                  var query;
+                  var id;
+                  id = message.author.id;
+                  query = "SELECT * FROM pets WHERE oid=" + id;
+                    if (err) throw err;
+                      connection.query(query, function(err, result, fields) {
+                      if (err) throw err;
+                      //check if profile exists
+                    if (!result.length) {
+                    console.log("no pet to decrement")
+                    } else {
+                          var hunger = JSON.stringify(result[0].hunger).replace(/[\<>@#&!"]/g, "");
+                          var type = JSON.stringify(result[0].type).replace(/[\<>@#&!"]/g, "");
+                          hunger = parseInt(hunger);
+                          if (hunger >= 1) {
+                            if (hunger == 75 || hunger == 50 || hunger == 25) hunger -= 1;
+                            mes = mes%2;
+                            console.log(mes);
+                            if(mes == 0)
+                            hunger -= 1;
+                          }
+                      /*UPDATE pets SET love = 55 WHERE oid = 'ID'*/
+                      var update = "UPDATE pets SET hunger = " + hunger + " WHERE oid = '" + id + "'";
+        
+                      connection.query(update, function(err, result, fields) {
+                        if (err) throw err;
+                        else {if(mes == 0)console.log("hunger decremented!");
+                            if(hunger == 75) message.channel.send(":meat_on_bone: *** your pet is a little hungry *** :meat_on_bone:");
+                            if (hunger == 50) message.channel.send(":bone: :cut_of_meat: :rice_cracker: *** your pet is HUNGRY *** :bone: :cut_of_meat: :rice_cracker:");
+                            if (hunger == 25) message.channel.send(":woozy_face: :skull_crossbones: :fish_cake:  *** YOUR PET IS STARVING *** :woozy_face: :skull_crossbones: :fish_cake: ");
+                            if(hunger == 0 && type == "Wisp"){
+                              message.channel.send("Your pet has died.");
+                               var update = "UPDATE pets SET type = " + "'Ghast'" + " WHERE oid = '" + id + "'";
+                                connection.query(update, function(err, result, fields) {
+                                if (err) throw err;
+                                });
+                                              
+                             }
+                             }  
+                      });
+                    }
+            });       
+                    
+                    }
+              });
+        }
+      });
+  }
+    });
+}
+//Auto decrement pet hunger when message sent!!!
