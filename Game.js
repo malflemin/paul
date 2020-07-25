@@ -30,6 +30,25 @@ const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'homies.jpg'
 message.channel.send(attachment);
 };
 
+game.prototype.eggs= async function(Canvas, canvas, ctx, Discord, message, sentence){
+
+const background = await Canvas.loadImage(__dirname + '/assets/egg.jpg');
+
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    ctx.font = "65px Arial";
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(sentence, 30, 660);
+
+const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'egg.jpg');
+ 
+message.channel.send(attachment);
+};
+
+
+
 
 
 game.prototype.drawFilter = async function(Canvas, canvas, ctx, Discord, message, attached, filter){
@@ -117,56 +136,31 @@ const attachment = new Discord.Attachment(canvas.toBuffer(), 'backdrop.jpg');
 message.channel.send(attachment);
 };
 
-
-game.prototype.drawAnim = async function(Canvas, canvas, ctx, encoder, message, Discord){
-  const background = await Canvas.loadImage(__dirname + '/assets/backdrop.jpg');
-  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-  // Since the image takes time to load, you should await it
-  // This uses the canvas dimensions to stretch the image onto the entire canvas
-  //OUTLINE
-  ctx.beginPath()
-  ctx.fillStyle = 'green'
-  ctx.rect(0, 0, canvas.width, canvas.height)
-  ctx.fill()
-
-  //load tree model
-  const heart = await Canvas.loadImage(__dirname + '/assets/tree.png');
+game.prototype.drawURL= async function(Canvas, canvas, ctx, url, encoder, message, Discord){
   
-  let PI = 3.1415926535;
-  var i, angle, x1, y1;
-  for(var i = 0; i < 360; i++){
-    if(i % 43 == 0){
-      //ctx.fillStyle = 'orange';
-      angle = i;
-      var x1 = 50 * Math.cos(angle * PI / 180);
-      var y1 = 50 * Math.sin(angle * PI / 180);
-      
-      
-      //else
-      //ctx.fillStyle = 'red'
-      if(i < 180){
-      ctx.drawImage(heart, 100 + x1, 100 + y1, 10, 15);
-      }
-      else
-        ctx.drawImage(heart, 100 + x1, 100 + y1, 5, 5);
-    
-  encoder.addFrame(ctx);}}
-  /*for(var j = 0; j < 10; j++){
-      ctx.fillStyle = 'orange';
-      ctx.fillRect(0, canvas.height, canvas.width-150, (((-canvas.height)/10)*j));//increase width over time
-      if(j == 1){
-        
-      }
-  encoder.addFrame(ctx);}*/
-   
-   
+  const background = await Canvas.loadImage(__dirname + '/assets/name.png');
+  ctx.drawImage(background, 0, 0,canvas.width,canvas.height);
+  encoder.addFrame(ctx);
+  // Save the current context
+  for(var x = 0; x < 6; x++){
+    ctx.drawImage(background, 0, 0,canvas.width,canvas.height);
+            ctx.save();  
+            // Translate to the center point of our image  
+            ctx.translate(canvas.width * 0.5, canvas.height * 0.5);  
+            // Perform the rotation  
+            ctx.rotate(2*(x+1/5));  
+            // Translate back to the top left of our image  
+            ctx.translate(-canvas.width * 0.5, -canvas.height * 0.5);  
+            // Finally we draw the image  
+            ctx.drawImage(background, 0, 0, canvas.width,canvas.height);  
+            // And restore the context ready for the next loop  
+            ctx.restore(); 
+
+    encoder.addFrame(ctx);
+  }
   encoder.finish();
-  
-  message.channel.send({files: ['./myanimated.gif']});
+  message.channel.send({files: ['./248283572652212225.gif']});
 };
-/*game.drawPet(Canvas, canvas, ctx, Discord, message, 
-                           name, age, love, hunger, type);*/
-
 
 
 game.prototype.drawAdv = async function(Canvas, canvas, ctx, message, Discord, type, faceIndex, hatIndex,chance,attack){
@@ -198,7 +192,14 @@ for(var x = 0; x < num; x++)
   ctx.drawImage(tree, 15+(num*(Math.random() * (50-10+1))), 150, 15, 70);
 }
   
-
+if(type == 'Dog'){
+const pet = await Canvas.loadImage(__dirname + '/assets/dog.png');
+const face = await Canvas.loadImage(__dirname + '/assets/face'+ faceIndex + '.png');
+const hat = await Canvas.loadImage(__dirname + '/assets/hat'+ hatIndex + '.png');
+ctx.drawImage(pet, 10, 75, 145, 126);
+ctx.drawImage(face, 45, 140, 60, 40);
+ctx.drawImage(hat, 25, 48, 100, 80);
+}
 
 if(type == 'Wisp'){
 const pet = await Canvas.loadImage(__dirname + '/assets/pet0.png');
@@ -227,6 +228,8 @@ ctx.drawImage(face, 45, 140, 60, 40);
 ctx.drawImage(hat, 25, 48, 100, 80);
 }
 
+
+  
 ctx.drawImage(ground, 0, 200, 150, 150);
 ctx.drawImage(ground, 150, 200, 150, 150);
 ctx.drawImage(ground, 300, 200, 150, 150);
@@ -239,7 +242,7 @@ else if(attack == 'blast'){
   ctx.rotate(180 * Math.PI / 180);
   ctx.drawImage(blast, 200, 0, -100, 100);
 }
-const attachment = new Discord.Attachment(canvas.toBuffer(), 'backdrop.jpg');
+const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'backdrop.jpg');
 message.channel.send(attachment);
 };
 
@@ -321,6 +324,15 @@ ctx.drawImage(pet, 25, 75, 123, 126);
 ctx.drawImage(face, 55, 140, 60, 40);
 ctx.drawImage(hat, 35, 45, 100, 80);
 }
+  
+if(type == 'Dog'){
+const pet = await Canvas.loadImage(__dirname + '/assets/dog.png');
+const face = await Canvas.loadImage(__dirname + '/assets/face'+ faceIndex + '.png');
+const hat = await Canvas.loadImage(__dirname + '/assets/hat'+ hatIndex + '.png');
+ctx.drawImage(pet, -5, 75, 145, 126);
+ctx.drawImage(face, 45, 140, 60, 40);
+ctx.drawImage(hat, 25, 48, 100, 80);
+}
 
 if(type == 'Fire'){
 const pet = await Canvas.loadImage(__dirname + '/assets/fire.png');
@@ -377,7 +389,7 @@ else if (message.content == ':borg'){
 }
 
   
-const attachment = new Discord.Attachment(canvas.toBuffer(), 'backdrop.jpg');
+const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'backdrop.jpg');
 message.channel.send(attachment);
 };
 
@@ -410,7 +422,7 @@ ctx.drawImage(qawwi, 100, 70, 100, 130);
   
 
   
-const attachment = new Discord.Attachment(canvas.toBuffer(), 'backdrop.jpg');
+const attachment = new Discord.MessageAttachment(canvas.toBuffer(), 'backdrop.jpg');
 message.channel.send(attachment);
 };
 module.exports = game;
