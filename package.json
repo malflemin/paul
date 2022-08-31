@@ -16,7 +16,7 @@
     "first-image-search-load": "^1.0.0",
     "random-puppy": "^1.1.0",
     "lyrics-fetcher": "^1.0.2",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.35",
     "google-images": "^2.1.0",
     "mysql": "^2.18.1",
     "webp-converter": "^2.2.8",
